@@ -43,6 +43,21 @@ public class EmployeeDatabase {
         }
         return manager;
     }
+    /**
+     * Returns the managee for the given manager.
+     *
+     * @param employee
+     * @return
+     */
+    ArrayList<Employee> findManagee(final Employee employee) {
+        ArrayList<Employee> managees = new ArrayList<Employee>();
+        for (int i = 0; i < employees.size(); i++) {
+            if (employees.get(i).getManager() == employee.getName()) {
+                managees.add(employees.get(i));
+            }
+        }
+        return managees;
+    }
 
     /**
      * Count the number of managers above this employee.
@@ -56,6 +71,11 @@ public class EmployeeDatabase {
         /*
          * Implement this function
          */
+        if (employee.getManager() == "" || findManager(employee) == null) {
+            return 0;
+        } else {
+            return countManagersAbove(findManager(employee)) + 1;
+        }
     }
 
     /**
@@ -70,6 +90,17 @@ public class EmployeeDatabase {
         /*
          * Implement this function
          */
+        if (findManagee(employee).size() == 0) {
+            return 0;
+        } else {
+            int count = 0;
+            for (Employee e : findManagee(employee)) {
+               // System.err.printf("%s is the %dth managee of %s\n", e.getName(), count, employee.getName());
+                count += countEmployeesUnder(e);
+            }
+           // System.err.printf("%s has %d managees in total\n", employee.getName(), findManagee(employee).size());
+            return count + findManagee(employee).size();
+        }
     }
 
     /**
@@ -117,6 +148,9 @@ public class EmployeeDatabase {
 
         answer = database.countEmployeesUnder(veronica);
         System.out.println("Veronica has " + Integer.toString(answer) + " employees under her.\n");
+
+        answer = database.countEmployeesUnder(joseph);
+        System.out.println("Joseph has " + Integer.toString(answer) + " employees under him.\n");
 
         // Count managers above
         answer = database.countManagersAbove(sally);
